@@ -86,7 +86,7 @@ function slideShowClass(options){
  
  slideShowClass.prototype.timedRunShow_objects_p = function(element){
        if(element.bit){
-         if( (element.n) > (element.set.length)){
+         if( (element.n) == (element.set.length)){
            this.fillObject(element.set, element.n);
            if(this.onComplete){
              setTimeout(this.onComplete_C(element),this.onCompleteDelay*1000);
