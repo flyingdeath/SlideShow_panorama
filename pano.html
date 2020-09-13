@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - equirectangular panorama</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link type="text/css" rel="stylesheet" href="main.css">
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link type="text/css" rel="stylesheet" href="/SlideShow_panorama/yui/build/fonts/fonts-min.css">
+		<link type="text/css" rel="stylesheet" href="/SlideShow_panorama/yui/build/slider/assets/skins/sam/slider.css">
+		<link type="text/css" rel="stylesheet" href="/SlideShow_panorama/yui/build/button/assets/skins/sam/button.css">
+		<link type="text/css" rel="stylesheet" href="/SlideShow_panorama/yui/build/treeview/assets/skins/sam/treeview.css">
+		<script src="/SlideShow_panorama/js/helperClass.js" type="text/javascript"></script>
+     <script type="text/javascript" language="JavaScript"  src="/SlideShow_panorama/js/slideShowClass.js"></script>
+     <!--script type="text/javascript" language="JavaScript"  src="/js/debugClass.js"></script-->
+
+
+		<script src="/SlideShow_panorama/yui/build/yahoo/yahoo.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/dom/dom.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/event/event.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/container/container.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/menu/menu-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/connection/connection-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/dragdrop/dragdrop-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/slider/slider.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/animation/animation-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/datasource/datasource-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/autocomplete/autocomplete-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/element/element-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/button/button-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/dragdrop/dragdrop-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/treeview/treeview-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/resize/resize.js" type="text/javascript"></script>
+    <style type="text/css"><!--
+    	#pausebtn{
+				position:absolute;
+				left:50%;
+				bottom:0px;
+	    	}
+	    	#mutebtn{
+				position:absolute;
+				left:25%;
+				bottom:0px;
+
+
+	    	}
+	      #btncontainer{
+				position:absolute;
+				top:0px;
+				bottom:40px;
+				width:99%;
+
+	      }
+	      #dummy,
+	      #dummy2,
+	      #dummy3{
+				position:absolute;
+				top:0px;
+				left:0px;
+
+	      }
+	      #sig{
+	        width:1060px;
+	        margin-left:auto;
+	        margin-right:auto;
+				position:absolute;
+				bottom:10px;
+				right:25%;
+	      }
+	      #sig p,
+	      #title_sig{
+	        text-align:right;
+	      }
+	      #container{
+	        position:absolute;
+	      }
+	      #innerContainer{
+	        position:relative;
+	        width:1024px;
+	        margin-left:auto;
+	        margin-right:auto;
+	      }
+		  #mutebtn{
+		  	width:50px;
+		  	height:50px;
+		  }
+	     #text_items, #text_items2{
+			position:absolute;
+	        width:1024px;
+	        height:768px;
+	        margin-left:auto;
+	        margin-right:auto;
+	        color:#FFF;
+	        top:0px;
+      }
+
+      #text_items div,
+      #text_items2 div{
+        display:none;
+      }
+      #item2_0 h1,
+      #item2_1 h2,
+      #item_0 h1,
+      #item_1 h2{
+        text-align:center;
+
+      }
+      body{
+      	color:#FFF;
+      	background-color:#000;
+      }
+      #projects_container{
+      	display:none;
+      	padding-left: 36px;
+      }
+	  div#innerBtnContainer:hover #projects_container{
+		display:inline-block;
+	  }
+  	  .thumbnail{
+  	  	width:128px;
+  	  	height:86px;
+  	  }
+  	  #menuBtn{
+  	  	width:32px;
+  	  	height:32px;
+  	  	top:0px;
+	    position:absolute;
+
+  	  }
+  	  #innerBtnContainer{
+	    position:absolute;
+
+  	  }
+      -->
+    </style>
+	</head>
+	<body>
+
+	 <div id="container">
+       <div id="innerContainer">
+		   <div id="text_items">
+				<div id="item_0"><h1>The Sea </h1>
+									<span id="title_sig">
+									  <p>By Brian Spiegel.<br/></p>
+									</span>
+				</div>
+				<div id="item_1"><h2>I want to show the coastline from beach, to cliff, to rock, to stone. I want to show the coastline it is made better by time and will of nature. I want to show the beach showing as the light from the sun bounces off of it. I want you to see it in all its vivid color that's why these images are now HDR and you are seeing the most light detail possible perceived. I hope you like these pictures they took time and effort to create and I enjoy viewing them. </h2></div>
+		  </div>
+		   <div id="text_items2">
+
+		  				<div id="item2_0"><h1>The Forest </h1>
+		  									<span id="title_sig">
+		  									  <p>By Brian Spiegel.<br/></p>
+		  									</span>
+		  				</div>
+					<div id="item2_1">
+					<h2>
+					I'm going to show the forest from branch to tree to running stream to rivers. I have a sort of a problem not many people of seeing these sites I've seen, I need your help you see to fill in your imagination and see into the forests as I see them. I hope you enjoy these photographs I have enjoyed creating and editing them and finally showing them.
+					</h2>
+				</div>
+			</div>
+		</div>
+    </div>
+    <div id="sig">
+      <p><span id="index"></span> Brian Spiegel.<br/></p>
+    </div>
+    <div id="btncontainer">
+		<audio   id="myAudio" loop="true">
+		  <source src="#" type="audio/mpeg"/>
+		  Your browser does not support the audio tag.
+	  	</audio>
+	  	<div id="innerBtnContainer">
+			<img src="https://raw.githubusercontent.com/flyingdeath/SlideShow_GPU_HDR/gh-pages/slide_show_assets/menu.png" title="Menu" id="menuBtn" />
+			<span id="projects_container">
+							<!-- super critical -----------------------------------------------------------------------------make sure the id's of thumbnail show icon is the same as your slide show set key -->
+				<img src="https://raw.githubusercontent.com/flyingdeath/SlideShow_GPU_HDR/gh-pages/the_sea_portfiolo/cover_thumbnail/_MG_2601_2_3_4_6_7_8.jpg" title="The Sea" id="theSea" class="thumbnail" />
+				<img src="https://raw.githubusercontent.com/flyingdeath/SlideShow_GPU_HDR/gh-pages/the_forest_portfolio/coverThumbnail/_MG_7294And8more.jpg" title="The Forest" id="theForest" class="thumbnail" />
+			</span>
+	  	</div>
+    <img src="https://raw.githubusercontent.com/flyingdeath/SlideShow_GPU_HDR/master/slide_show_assets/p.png" title="Pause" id="pausebtn"/>
+    <img src="https://raw.githubusercontent.com/flyingdeath/SlideShow_GPU_HDR/master/audio_icons/mute_off.png" title="Mute" id="mutebtn"/>
+	</div>
+	<div id="dummy"></div>
+	<div id="dummy2"></div>
+	<div id="dummy3"></div>
+
+		<script type="module">
+
+			import * as THREE from '../build/three.module.js';
+
+			var camera, scene, renderer;
+
+			var isUserInteracting = false,
+				onMouseDownMouseX = 0, onMouseDownMouseY = 0,
+				lon = 0, onMouseDownLon = 0,
+				lat = 0, onMouseDownLat = 0,
+				phi = 0, theta = 0;
+
+			init();
+			animate();
+
+			function init() {
+
+				var container, mesh;
+
+				container = document.getElementById( 'container' );
+
+				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1100 );
+				camera.target = new THREE.Vector3( 0, 0, 0 );
+
+				scene = new THREE.Scene();
+
+				var geometry = new THREE.SphereBufferGeometry( 500, 60, 40 );
+				// invert the geometry on the x-axis so that all of the faces point inward
+				geometry.scale( - 1, 1, 1 );
+
+				var texture = new THREE.TextureLoader().load( 'textures/_MG_8552 Panorama.jpg' );
+				var material = new THREE.MeshBasicMaterial( { map: texture } );
+
+				mesh = new THREE.Mesh( geometry, material );
+
+				scene.add( mesh );
+
+				renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				container.appendChild( renderer.domElement );
+
+				document.addEventListener( 'mousedown', onPointerStart, false );
+				document.addEventListener( 'mousemove', onPointerMove, false );
+				document.addEventListener( 'mouseup', onPointerUp, false );
+
+				document.addEventListener( 'wheel', onDocumentMouseWheel, false );
+
+				document.addEventListener( 'touchstart', onPointerStart, false );
+				document.addEventListener( 'touchmove', onPointerMove, false );
+				document.addEventListener( 'touchend', onPointerUp, false );
+
+				//
+
+				document.addEventListener( 'dragover', function ( event ) {
+
+					event.preventDefault();
+					event.dataTransfer.dropEffect = 'copy';
+
+				}, false );
+
+				document.addEventListener( 'dragenter', function () {
+
+					document.body.style.opacity = 0.5;
+
+				}, false );
+
+				document.addEventListener( 'dragleave', function () {
+
+					document.body.style.opacity = 1;
+
+				}, false );
+
+				document.addEventListener( 'drop', function ( event ) {
+
+					event.preventDefault();
+
+					var reader = new FileReader();
+					reader.addEventListener( 'load', function ( event ) {
+
+						material.map.image.src = event.target.result;
+						material.map.needsUpdate = true;
+
+					}, false );
+					reader.readAsDataURL( event.dataTransfer.files[ 0 ] );
+
+					document.body.style.opacity = 1;
+
+				}, false );
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function onPointerStart( event ) {
+
+				isUserInteracting = true;
+
+				var clientX = event.clientX || event.touches[ 0 ].clientX;
+				var clientY = event.clientY || event.touches[ 0 ].clientY;
+
+				onMouseDownMouseX = clientX;
+				onMouseDownMouseY = clientY;
+
+				onMouseDownLon = lon;
+				onMouseDownLat = lat;
+
+			}
+
+			function onPointerMove( event ) {
+
+				if ( isUserInteracting === true ) {
+
+					var clientX = event.clientX || event.touches[ 0 ].clientX;
+					var clientY = event.clientY || event.touches[ 0 ].clientY;
+
+					lon = ( onMouseDownMouseX - clientX ) * 0.1 + onMouseDownLon;
+					lat = ( clientY - onMouseDownMouseY ) * 0.1 + onMouseDownLat;
+
+				}
+
+			}
+
+			function onPointerUp() {
+
+				isUserInteracting = false;
+
+			}
+
+			function onDocumentMouseWheel( event ) {
+
+				var fov = camera.fov + event.deltaY * 0.05;
+
+				camera.fov = THREE.Math.clamp( fov, 10, 75 );
+
+				camera.updateProjectionMatrix();
+
+			}
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+				update();
+
+			}
+
+			function update() {
+
+				if ( isUserInteracting === false ) {
+
+					lon += 0.1;
+
+				}
+
+				lat = Math.max( - 85, Math.min( 85, lat ) );
+				phi = THREE.Math.degToRad( 90 - lat );
+				theta = THREE.Math.degToRad( lon );
+
+				camera.target.x = 500 * Math.sin( phi ) * Math.cos( theta );
+				camera.target.y = 500 * Math.cos( phi );
+				camera.target.z = 500 * Math.sin( phi ) * Math.sin( theta );
+
+				camera.lookAt( camera.target );
+
+				/*
+				// distortion
+				camera.position.copy( camera.target ).negate();
+				*/
+
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+	</body>
+</html>

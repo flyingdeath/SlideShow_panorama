@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - equirectangular panorama</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link type="text/css" rel="stylesheet" href="./three.js/examples/main.css">
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link type="text/css" rel="stylesheet" href="/SlideShow_panorama/yui/build/fonts/fonts-min.css">
+		<link type="text/css" rel="stylesheet" href="/SlideShow_panorama/yui/build/slider/assets/skins/sam/slider.css">
+		<link type="text/css" rel="stylesheet" href="/SlideShow_panorama/yui/build/button/assets/skins/sam/button.css">
+		<link type="text/css" rel="stylesheet" href="/SlideShow_panorama/yui/build/treeview/assets/skins/sam/treeview.css">
+		<script src="/SlideShow_panorama/js/helperClass.js" type="text/javascript"></script>
+     <script type="text/javascript" language="JavaScript"  src="/SlideShow_panorama/js/panoSlideShow.js"></script>
+     <script type="text/javascript" language="JavaScript"  src="/SlideShow_panorama/js/slideShowClass.js"></script>
+     <!--script type="text/javascript" language="JavaScript"  src="/js/debugClass.js"></script-->
+
+
+		<script src="/SlideShow_panorama/yui/build/yahoo/yahoo.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/dom/dom.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/event/event.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/container/container.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/menu/menu-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/connection/connection-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/dragdrop/dragdrop-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/slider/slider.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/animation/animation-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/datasource/datasource-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/autocomplete/autocomplete-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/element/element-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/button/button-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/dragdrop/dragdrop-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/treeview/treeview-min.js" type="text/javascript"></script>
+		<script src="/SlideShow_panorama/yui/build/resize/resize.js" type="text/javascript"></script>
+    <style type="text/css"><!--
+    	#pausebtn{
+				position:absolute;
+				left:50%;
+				bottom:0px;
+	    	}
+	    	#mutebtn{
+				position:absolute;
+				left:25%;
+				bottom:0px;
+
+
+	    	}
+	      #btncontainer{
+				position:absolute;
+				top:0px;
+				bottom:40px;
+				width:99%;
+
+	      }
+	      #dummy,
+	      #dummy2,
+	      #dummy3{
+				position:absolute;
+				top:0px;
+				left:0px;
+
+	      }
+	      #sig{
+	        width:1060px;
+	        margin-left:auto;
+	        margin-right:auto;
+				position:absolute;
+				bottom:10px;
+				right:25%;
+	      }
+	      #sig p,
+	      #title_sig{
+	        text-align:right;
+	      }
+	      #container{
+	        position:absolute;
+	      }
+	      #innerContainer{
+	        position:relative;
+	        width:1024px;
+	        margin-left:auto;
+	        margin-right:auto;
+	      }
+		  #mutebtn{
+		  	width:50px;
+		  	height:50px;
+		  }
+	     #text_items, #text_items2{
+			position:absolute;
+	        width:1024px;
+	        height:768px;
+	        margin-left:auto;
+	        margin-right:auto;
+	        color:#FFF;
+	        top:0px;
+      }
+      #container{
+      	width:100%;
+      }
+
+      #text_items div,
+      #text_items2 div{
+        display:none;
+      }
+      #item2_0 h1,
+      #item2_1 h2,
+      #item_0 h1,
+      #item_1 h2{
+        text-align:center;
+
+      }
+      body{
+      	color:#FFF;
+      	background-color:#000;
+      }
+      #projects_container{
+      	display:none;
+      	padding-left: 36px;
+      }
+	  div#innerBtnContainer:hover #projects_container{
+		display:inline-block;
+	  }
+  	  .thumbnail{
+  	  	width:200px;
+		display:block;
+
+  	  }
+  	  #item_0{
+  	  	display:block;
+
+  	  }
+  	  #menuBtn{
+  	  	width:32px;
+  	  	height:32px;
+  	  	top:0px;
+	    position:absolute;
+
+  	  }
+  	  #innerBtnContainer{
+	    position:absolute;
+
+  	  }
+      -->
+    </style>
+	</head>
+	<body>
+
+	 <div id="container">
+       <div id="innerContainer">
+		   <div id="text_items">
+				<div id="item_0"><h1>3d 360&#186; Panorama Showcase</h1>
+									<span id="title_sig">
+									  <p>By Brian Spiegel.<br/></p>
+									</span>
+				</div>
+				<div id="item_1"><h2>I want to show you some but not just any old way, but 3-D three. 360&#186; view of different places around the Monterey Bay. Some in Carmel, others in Monterey, Seaside, Santa Cruz and, Fremont Peak. This is re-envisioning my work is as I could've never predicted in making these this new view on my work I These are incredible sites to behold  holds and will should leave you captivated hope you enjoy them. </h2></div>
+		  </div>
+		</div>
+    </div>
+    <div id="sig">
+      <p><span id="index"></span> Brian Spiegel.<br/></p>
+    </div>
+    <div id="btncontainer">
+	  	<div id="innerBtnContainer">
+			<img src="https://raw.githubusercontent.com/flyingdeath/SlideShow_GPU_HDR/gh-pages/slide_show_assets/menu.png" title="Menu" id="menuBtn" />
+			<span id="projects_container">
+			    <img src="./Panos/carmel shopping/Thumb/_MG_2996 Panorama.jpg" title="Carmel Shopping" id="pano_0" class="thumbnail" />
+				<img src="./Panos/The Barnyard Shopping Village/Thumb/_MG_3848 Panorama.jpg" title="The Barnyard Shopping Village " id="pano_1" class="thumbnail" />
+				<img src="./Panos/el dorado park/Thumb/_MG_3418 Panorama.jpg" title="El Dorado Park" id="pano_2" class="thumbnail" />
+				<img src="./Panos/Laguna Grande Regional Park/Thumb/_MG_5640 Panorama.jpg" title="Laguna Grande Regional Park" id="pano_3" class="thumbnail" />
+				<img src="./Panos/Salinas Neighborhood/Thumb/_MG_8555 Panorama.jpg" title="Salinas Neighborhood" id="pano_4" class="thumbnail" />
+				<img src="./Panos/Monterey Wharf and Customs House/Thumb/_MG_6440 Panorama 002(edited) _1.jpg" title="Monterey Wharf and Customs Houseg" id="pano_5" class="thumbnail" />
+				<img src="./Panos/carmel panos/Thumb/_MG_7530 Panorama.jpg" title="Carmel Panos" id="pano_6" class="thumbnail" />
+				<img src="./Panos/Home panos/Thumb/_MG_6487 Panorama.jpg" title="Home Panos" id="pano_7" class="thumbnail" />
+				<img src="./Panos/Mics_pano/Thumb/_MG_3396 Panorama.jpg" title="Mics Pano " id="pano_8" class="thumbnail" />
+
+			</span>
+	  	</div>
+    <img src="https://raw.githubusercontent.com/flyingdeath/SlideShow_GPU_HDR/master/slide_show_assets/p.png" title="Pause" id="pausebtn"/>
+	</div>
+	<div id="dummy"></div>
+	<div id="dummy2"></div>
+	<div id="dummy3"></div>
+
+		<script type="module">
+
+			import * as THREE from './Three.js/build/three.module.js';
+
+
+			function init() {
+					var c = 6;
+					var textIntro =  new slideShowClass({fade:true,
+											  fadeTime:1.5,
+											  initInterval:c,
+											  interval: c*2,
+											  'textList' : ["item_0","item_1"],
+											  onCompleteDelay:c/2,
+												onComplete: function(){
+																var pano = new panoSlideShow(THREE, FileReader, {
+																listIndex : 0,
+																interval : 30000,
+																indexId : "index",
+																pbtnId:"pausebtn",
+																playBtnImage : './slide_show_assets/play.png',
+																pauseBtnImage :'./slide_show_assets/p.png',
+																showIds:["pano_0","pano_1","pano_2","pano_3","pano_4","pano_5","pano_6","pano_7","pano_8"],
+																setsOflists:[
+																{title: "Carmel Shopping",
+																list:[
+																'./Panos/carmel shopping/JPG 12000/_MG_2944 Panorama.jpg',
+																'./Panos/carmel shopping/JPG 12000/_MG_2979 Panorama.jpg',
+																'./Panos/carmel shopping/JPG 12000/_MG_2996 Panorama.jpg',
+																'./Panos/carmel shopping/JPG 12000/_MG_3013 Panorama.jpg',
+																'./Panos/carmel shopping/JPG 12000/_MG_3027 Panorama.jpg',
+																'./Panos/carmel shopping/JPG 12000/_MG_3045 Panorama.jpg',
+																'./Panos/carmel shopping/JPG 12000/_MG_3068 Panorama.jpg',
+																'./Panos/carmel shopping/JPG 12000/_MG_3086 Panorama.jpg',
+																'./Panos/carmel shopping/JPG 12000/_MG_3102 Panorama.jpg',
+																'./Panos/carmel shopping/JPG 12000/_MG_3114 Panorama.jpg',
+																'./Panos/carmel shopping/JPG 12000/_MG_3130 Panorama.jpg'
+																]},
+																{title: "The Barnyard Shopping Village",
+																list:[
+																'./Panos/The Barnyard Shopping Village/JPG 12000/_MG_3848 Panorama.jpg',
+																'./Panos/The Barnyard Shopping Village/JPG 12000/_MG_3861 Panorama.jpg',
+																'./Panos/The Barnyard Shopping Village/JPG 12000/_MG_3882 Panorama.jpg',
+																'./Panos/The Barnyard Shopping Village/JPG 12000/_MG_3896 Panorama.jpg',
+																'./Panos/The Barnyard Shopping Village/JPG 12000/_MG_3916 Panorama.jpg',
+																'./Panos/The Barnyard Shopping Village/JPG 12000/_MG_3930 Panorama.jpg',
+																'./Panos/The Barnyard Shopping Village/JPG 12000/_MG_3943 Panorama.jpg',
+																'./Panos/The Barnyard Shopping Village/JPG 12000/_MG_3961 Panorama.jpg',
+																'./Panos/The Barnyard Shopping Village/JPG 12000/_MG_3976 Panorama.jpg',
+																'./Panos/The Barnyard Shopping Village/JPG 12000/_MG_3989 Panorama.jpg'
+																]},
+																{title: "El Dorado Park",
+																list:[
+																'./Panos/el dorado park/JPG 12000/_MG_3418 Panorama.jpg',
+																'./Panos/el dorado park/JPG 12000/_MG_3431 Panorama.jpg',
+																'./Panos/el dorado park/JPG 12000/_MG_3447 Panorama.jpg',
+																'./Panos/el dorado park/JPG 12000/_MG_3465 Panorama.jpg',
+																'./Panos/el dorado park/JPG 12000/_MG_3479 Panorama.jpg',
+																'./Panos/el dorado park/JPG 12000/_MG_3496 Panorama.jpg',
+																'./Panos/el dorado park/JPG 12000/_MG_3510 Panorama.jpg',
+																'./Panos/el dorado park/JPG 12000/_MG_3526 Panorama.jpg',
+																'./Panos/el dorado park/JPG 12000/_MG_3540 Panorama.jpg'
+																]},
+																{title: "Laguna Grande Regional Park",
+																list:[
+																'./Panos/Laguna Grande Regional Park/JPG 12000/_MG_5640 Panorama.jpg',
+																'./Panos/Laguna Grande Regional Park/JPG 12000/_MG_5656 Panorama.jpg',
+																'./Panos/Laguna Grande Regional Park/JPG 12000/_MG_5669 Panorama.jpg',
+																'./Panos/Laguna Grande Regional Park/JPG 12000/_MG_5684 Panorama.jpg',
+																'./Panos/Laguna Grande Regional Park/JPG 12000/_MG_5699 Panorama.jpg',
+																'./Panos/Laguna Grande Regional Park/JPG 12000/_MG_5701 Panorama_2.jpg',
+																'./Panos/Laguna Grande Regional Park/JPG 12000/_MG_5722 Panorama.jpg',
+																'./Panos/Laguna Grande Regional Park/JPG 12000/_MG_5742 Panorama.jpg',
+																'./Panos/Laguna Grande Regional Park/JPG 12000/_MG_5756 Panorama.jpg',
+																'./Panos/Laguna Grande Regional Park/JPG 12000/_MG_5771 Panorama.jpg',
+																'./Panos/Laguna Grande Regional Park/JPG 12000/_MG_5786 Panorama.jpg'
+																]},
+																{title: "Salinas Neighborhood",
+																list:[
+																'./Panos/Salinas Neighborhood/JPG 12000/_MG_8555 Panorama.jpg',
+																'./Panos/Salinas Neighborhood/JPG 12000/_MG_8574 Panorama.jpg',
+																'./Panos/Salinas Neighborhood/JPG 12000/_MG_8587 Panorama.jpg',
+																'./Panos/Salinas Neighborhood/JPG 12000/_MG_8602 Panorama.jpg',
+																'./Panos/Salinas Neighborhood/JPG 12000/_MG_8633 Panorama.jpg',
+																'./Panos/Salinas Neighborhood/JPG 12000/_MG_8648 Panorama.jpg'
+																]},
+																{title: "Monterey Wharf and Customs House",
+																list:[
+																'./Panos/Monterey Wharf and Customs House/JPG 12000/_MG_6440 Panorama 002(edited) _1.jpg',
+																'./Panos/Monterey Wharf and Customs House/JPG 12000/_MG_6441 Panorama_1.jpg',
+																'./Panos/Monterey Wharf and Customs House/JPG 12000/_MG_6453 Panorama_1.jpg',
+																'./Panos/Monterey Wharf and Customs House/JPG 12000/_MG_6469 Panorama.jpg',
+																'./Panos/Monterey Wharf and Customs House/JPG 12000/_MG_6485 Panorama.jpg',
+																'./Panos/Monterey Wharf and Customs House/JPG 12000/_MG_6498 Panorama.jpg',
+																'./Panos/Monterey Wharf and Customs House/JPG 12000/_MG_6515 Panorama.jpg',
+																'./Panos/Monterey Wharf and Customs House/JPG 12000/_MG_6531 Panorama.jpg',
+																'./Panos/Monterey Wharf and Customs House/JPG 12000/_MG_6545 Panorama.jpg'
+																]},
+																{title: "Carmel Panos",
+																list:[
+																'./Panos/carmel panos/JPG 12000/_MG_7446 Panorama_1.jpg',
+																'./Panos/carmel panos/JPG 12000/_MG_7467 Panorama_1.jpg',
+																'./Panos/carmel panos/JPG 12000/_MG_7487 Panorama_1.jpg',
+																'./Panos/carmel panos/JPG 12000/_MG_7506 Panorama.jpg',
+																'./Panos/carmel panos/JPG 12000/_MG_7530 Panorama.jpg',
+																'./Panos/carmel panos/JPG 12000/_MG_7549 Panorama_1.jpg',
+																'./Panos/carmel panos/JPG 12000/_MG_7568 Panorama.jpg',
+																'./Panos/carmel panos/JPG 12000/_MG_7585 Panorama.jpg',
+																'./Panos/carmel panos/JPG 12000/_MG_7602 Panorama.jpg',
+																'./Panos/carmel panos/JPG 12000/_MG_7620 Panorama.jpg'
+																]},
+																{title: "Home Panos",
+																list:[
+																'./Panos/Home panos/JPG 12000/_MG_3354 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_3397 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_3425 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_3453 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_3510 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_3555 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_3808 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_3841 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_3870 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_4045 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_6487 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_6522 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_6572 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_6589 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_6609 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_6633 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_6656 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_6677 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_6694 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_6768 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_6782 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_6798 Panorama.jpg',
+																'./Panos/Home panos/JPG 12000/_MG_6815 Panorama.jpg'
+																]},
+																{title: "Mics. pano",
+																list:[
+																'./Panos/Mics_pano/JPG 12000/Untitled_Panorama1.jpg',
+																'./Panos/Mics_pano/JPG 12000/_MG_3396 Panorama.jpg'
+																]}
+																]});
+
+
+											  }
+											  });
+			}
+			window.onload = init();
+
+		</script>
+	</body>
+</html>

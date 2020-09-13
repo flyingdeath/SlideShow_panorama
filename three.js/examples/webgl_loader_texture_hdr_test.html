@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>The Sea By,  Brian Spiegel.</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link type="text/css" rel="stylesheet" href="main.css">
+		<link type="text/css" rel="stylesheet" href="/yui/build/fonts/fonts-min.css">
+		<link type="text/css" rel="stylesheet" href="/yui/build/slider/assets/skins/sam/slider.css">
+		<link type="text/css" rel="stylesheet" href="/yui/build/button/assets/skins/sam/button.css">
+		<link type="text/css" rel="stylesheet" href="/yui/build/treeview/assets/skins/sam/treeview.css">
+		<script src="./js/helperClass.js" type="text/javascript"></script>
+     <script type="text/javascript" language="JavaScript"  src="./js/slideShowClass.js"></script>
+     <script type="text/javascript" language="JavaScript"  src="./js/debugClass.js"></script>
+
+		<script src="/yui/build/yahoo/yahoo.js" type="text/javascript"></script>
+		<script src="/yui/build/dom/dom.js" type="text/javascript"></script>
+		<script src="/yui/build/event/event.js" type="text/javascript"></script>
+		<script src="/yui/build/container/container.js" type="text/javascript"></script>
+		<script src="/yui/build/menu/menu-min.js" type="text/javascript"></script>
+		<script src="/yui/build/connection/connection-min.js" type="text/javascript"></script>
+		<script src="/yui/build/dragdrop/dragdrop-min.js" type="text/javascript"></script>
+		<script src="/yui/build/slider/slider.js" type="text/javascript"></script>
+		<script src="/yui/build/animation/animation-min.js" type="text/javascript"></script>
+		<script src="/yui/build/datasource/datasource-min.js" type="text/javascript"></script>
+		<script src="/yui/build/autocomplete/autocomplete-min.js" type="text/javascript"></script>
+		<script src="/yui/build/element/element-min.js" type="text/javascript"></script>
+		<script src="/yui/build/button/button-min.js" type="text/javascript"></script>
+		<script src="/yui/build/dragdrop/dragdrop-min.js" type="text/javascript"></script>
+		<script src="/yui/build/treeview/treeview-min.js" type="text/javascript"></script>
+		<script src="/yui/build/resize/resize.js" type="text/javascript"></script>
+    <style type="text/css"><!--
+    	#pausebtn{
+				position:absolute;
+				left:50%;
+				bottom:0px;
+	    	}
+	    	#mutebtn{
+				position:absolute;
+				left:25%;
+				bottom:0px;
+
+
+	    	}
+	      #btncontainer{
+				position:absolute;
+				top:0px;
+				bottom:40px;
+				width:100%;
+
+	      }
+	      #dummy,
+	      #dummy2,
+	      #dummy3{
+				position:absolute;
+				top:0px;
+				left:0px;
+
+	      }
+	      #sig{
+	        width:1060px;
+	        margin-left:auto;
+	        margin-right:auto;
+				position:absolute;
+				bottom:10px;
+				right:25%;
+	      }
+	      #sig p,
+	      #title_sig{
+	        text-align:right;
+	      }
+	      #container{
+	        position:absolute;
+	      }
+	      #innerContainer{
+	        position:relative;
+	        width:1024px;
+	        margin-left:auto;
+	        margin-right:auto;
+	      }
+		  #mutebtn{
+		  	width:50px;
+		  	height:50px;
+		  }
+	     #text_items{
+			position:absolute;
+	        width:1024px;
+	        height:768px;
+	        margin-left:auto;
+	        margin-right:auto;
+	        color:#FFF;
+	        top:0px;
+      }
+
+      #text_items div{
+        display:none;
+      }
+      #item_0 h1,
+      #item_1 h2{
+        text-align:center;
+
+      }
+      -->
+    </style>
+	</head>
+
+	<body>
+  <div id="page">
+    <div id="container">
+       <div id="innerContainer">
+		   <div id="text_items">
+				<div id="item_0"><h1>The Sea </h1>
+									<span id="title_sig">
+									  <p>By Brian Spiegel.<br/></p>
+									</span>
+				</div>
+				<div id="item_1"><h2>I want to show the coastline from beach, to cliff, to rock, to stone. I want to show the coastline it is made better by time and will of nature. I want to show the beach showing as the light from the sun bounces off of it. I want you to see it in all its vivid color that's why these images are now HDR and you are seeing the most light detail possible perceived. I hope you like these pictures they took time and effort to create and I enjoy viewing them. </h2></div>
+		  </div>
+		</div>
+    </div>
+    <div id="sig">
+      <p><span id="index"></span> Brian Spiegel.<br/></p>
+    </div>
+    <div id="btncontainer">
+		<audio  autoplay="true" id="myAudio" loop="true">
+		  <source src="./sounds/mp3/ocean_waves.mp3" type="audio/mpeg"/>
+		  Your browser does not support the audio tag.
+	  	</audio>
+    <img src="./textures/slide_show_assets/p.png" title="Pause" id="pausebtn"/>
+    <img src="./textures/audio_icons/mute_off.png" title="mute" id="mutebtn"/>
+	</div>
+	<div id="dummy"></div>
+	<div id="dummy2"></div>
+	<div id="dummy3"></div>
+		<script type="module">
+
+			import * as THREE from '../build/three.module.js';
+
+			import { GUI } from './jsm/libs/dat.gui.module.js';
+
+			import { RGBELoader } from './jsm/loaders/RGBELoader.js';
+
+			var params = {
+				exposure: 2.0
+			};
+
+			var renderer, scene, camera;
+
+			var files = ['textures/the_sea_portfiolo/_MG_2525And7more.hdr',
+						'textures/the_sea_portfiolo/_MG_2601_2_3_4_6_7_8.hdr',
+						'textures/the_sea_portfiolo/_MG_2755And9more.hdr',
+						'textures/the_sea_portfiolo/_MG_3660And7more.hdr',
+						'textures/the_sea_portfiolo/_MG_4144_5_6_newest.hdr',
+						'textures/the_sea_portfiolo/_MG_4191_2_3.hdr',
+						'textures/the_sea_portfiolo/_MG_4940And9more.hdr',
+						'textures/the_sea_portfiolo/_MG_5471And9more.hdr',
+						'textures/the_sea_portfiolo/_MG_5569And9more.hdr',
+						'textures/the_sea_portfiolo/_MG_6256And9more2.hdr',
+						'textures/the_sea_portfiolo/_MG_6313And9more.hdr',
+						'textures/the_sea_portfiolo/_MG_7030And7more.hdr',
+						'textures/the_sea_portfiolo/_MG_7645And9more.hdr',
+						'textures/the_sea_portfiolo/_MG_8418And7more.hdr',
+						'textures/the_sea_portfiolo/_MG_8633_4_5_6_7_8_9.hdr',
+						'textures/the_sea_portfiolo/_MG_8643And9more.hdr',
+						'textures/the_sea_portfiolo/_MG_9146And9more_more.hdr',
+						'textures/the_sea_portfiolo/_MG_9656And9more.hdr'];
+				//document.getElementById("myAudio").play();
+
+				init();
+			window.onload = function(){
+				}
+
+			function init() {
+				var b = new debugClass({createNode:1,nodeId:"test"});
+				var t = 0;
+				var timerObj      = [null];// setInterval(set_aminte_pulse(params, t), 1);
+				var element = { bit: 1, playBtnImage : './textures/slide_show_assets/play.png',
+									   pauseBtnImage :'./textures/slide_show_assets/p.png',
+									   muteOffBtnImage :'./textures/audio_icons/mute_off.png',
+									   muteonBtnImage :'./textures/audio_icons/mute_on.png',
+									   mutebtn : "mutebtn",
+									   pbtnId:'pausebtn',
+									   s : scene,
+									   f : files,
+									   st : 0,
+									   ft: "crossFade",//"none",// "OutIn", //"crossFade",
+									   audioBit: 1,
+									   t : [],
+									   p: params,
+									   debug: b,
+									   tObj: [null]
+									   };
+			    YAHOO.util.Event.addListener(element.pbtnId, 'click', toggleShow, element);
+			    YAHOO.util.Event.addListener(element.mutebtn, 'click', toggleAudio, element);
+				  var textList =  ["item_0","item_1"];
+			 	 var i = 8;
+
+
+
+				renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.getElementById('container').appendChild( renderer.domElement );
+
+				YAHOO.util.Dom.generateId(renderer.domElement);
+
+				var id = renderer.domElement.id;
+
+
+				renderer.toneMapping = THREE.ReinhardToneMapping;
+				renderer.toneMappingExposure = params.exposure;
+
+				renderer.gammaOutput = true;
+
+				scene = new THREE.Scene();
+				var h = new helperClass();
+				var aspect = window.innerWidth / window.innerHeight;
+				camera = new THREE.OrthographicCamera( - aspect, aspect, 1, - 1, 0, 1 );
+				var texture01 =[];
+
+				function changeImageSrc(id,src){
+					var domObj = document.getElementById(id);
+					if(domObj){
+					  domObj.src = src;
+					}
+					domObj = new helperClass().deleteDomElement(domObj);
+				 }
+				//http://localhost/three.js/examples/webgl_loader_texture_hdr.html
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+				function set_aminte_pulse(p,t){
+					var param01 = p, ticks = t;
+					var flag = false;
+					return function(){
+							if(param01){
+								param01.exposure = Math.sin(ticks*0.01 ) +1;
+								render();
+								if(flag){
+									ticks--;
+								}else{
+									ticks++;
+								}
+								if( ticks == Number.MAX_VALUE){
+								 flag = true;
+								}
+								if( ticks == 0){
+								 flag = false;
+								}
+							}
+					}
+				}
+ 				//setInterval(function(){ alert("Hello"); }, 3000);
+				function slideShow(scene,files,ticks, texture01, params, timerobj, fadeType , debug){
+					var t0 =	ticks, par = params, texture01, timer = timerobj, ft = fadeType, d = debug;
+					var s = scene, f = files;
+					return function (){
+						setnewtexture(s,f[t0], texture01, par,timer, t0, f.length, ft,false, d);
+
+
+						t0++;
+						if(t0 == f.length){
+							t0 = 0;
+						}
+					}
+				}
+ 					h.hide("sig");
+  					h.show(textList[0])
+			  new slideShowClass({fade:true,
+				                      fadeTime:1.5,
+				                      initInterval:i,
+				                      interval: i*2,
+				                      'textList': textList,
+				                      onCompleteDelay:i/2,
+                      					onComplete: function(){
+
+ 											h.show("sig");
+											setnewtexture(scene,files[0], element.t, params, element.tObj, element.st, element.f.length,element.ft,"new", element.debug);
+											element.st++;
+											h.updateHTML('index',"1/"+files.length + "<br/>The Sea By, <br/> " );
+
+											element.slide_showObj = setInterval(
+													slideShow(element.s,element.f,element.st, element.t, element.p, element.tObj, element.ft, element.debug),10000)
+
+
+									  }
+									  });
+								/*		  */
+				function toggleAudio(eventObj, element){
+					if(element.audioBit){
+					   changeImageSrc(element.mutebtn,element.muteonBtnImage);
+					   element.audioBit = 0 ;
+						document.getElementById("myAudio").pause();
+					 }else{
+					   element.audioBit = 1 ;
+					   changeImageSrc(element.mutebtn,element.muteOffBtnImage);
+						document.getElementById("myAudio").play();
+
+					}
+
+				}
+				function toggleShow(eventObj, element){
+					if(element.bit){
+					   changeImageSrc(element.pbtnId,element.playBtnImage);
+       				   clearInterval(element.slide_showObj);
+					   element.bit = 0 ;
+					 }else{
+					   element.bit = 1 ;
+					   slideShow(element.s,element.f,element.st, element.t, element.p, element.tObj, element.ft, element.debug)();
+					   element.st++;
+					   changeImageSrc(element.pbtnId,element.pauseBtnImage);
+       				   clearInterval(element.slide_showObj);
+						element.slide_showObj = setInterval(
+								slideShow(element.s,element.f,element.st, element.t, element.p, element.tObj, element.ft, element.debug),10000)
+					}
+
+				}
+				//var gui = new GUI();
+
+				//gui.add( params, 'exposure', 0, 4, 0.01 ).onChange( render );
+				//gui.open();
+
+			function setnewtexture(scene, filepath, oldmesh, param0, time, index, len, fadeType, isNew,debug){
+				if(oldmesh[0]){
+				  	if (fadeType  == "OutIn"){
+						  h.fadeAnimation({run: true,
+						  seconds: 3,
+						  obj:"dummy3",
+						  method: YAHOO.util.Easing.easeOutStrong,
+						  start:1.0,
+						  finish: 0.0,
+						  onTween:function(obj1,obj2,obj3){
+								param0.exposure  = parseFloat(YAHOO.util.Dom.getStyle("dummy3","opacity"))*1.2;
+								render();
+						  },
+						  onComplete:function(){
+								param0.exposure  = 0;
+								render();
+								scene.remove( oldmesh[0] );
+								render();
+							  setMesh(filepath,id,params, t, time, oldmesh, index, len, fadeType, isNew,debug);
+
+
+						  },
+						  onStart: function(){
+							YAHOO.util.Dom.setStyle("dummy3","opacity",1.0)
+							//h.show(renderer.domElement);
+						  }});
+					}else{
+							  setMesh(filepath,id,params, t, time, oldmesh, index, len, fadeType, isNew,debug);
+					}
+				}else{
+					setMesh(filepath,id,param0, t, time, oldmesh, index, len, fadeType, isNew,debug);
+				}
+
+
+			}
+
+
+			function setMesh(filepath,id0,params, t, timerObj, texture_mesh, index, len,fadeType, isNew,debug){
+
+				 new RGBELoader()
+					.setDataType( THREE.UnsignedByteType ) // alt: FloatType, HalfFloatType
+					.load( filepath, function ( texture, textureData ) {
+						try{
+
+							//console.log( textureData );
+							//console.log( texture );
+
+							var material = new THREE.MeshBasicMaterial( { map: texture } );
+
+							var quad = new THREE.PlaneBufferGeometry( 1.5 * textureData.width / textureData.height, 1.5 );
+
+								var mesh = new THREE.Mesh( quad, material );
+
+								scene.add(mesh);
+								if(!isNew &&  fadeType !== "OutIn"){
+									mesh.material.opacity = 1.0;
+									mesh.material.transparent = false;
+									params.exposure  = 1.2;
+								}
+
+								if(texture_mesh[0]   &&  fadeType !== "OutIn"){
+									texture_mesh[0].material.transparent = true;
+									texture_mesh[0].material.opacity = 1.0;
+								}
+
+							if( "OutIn" == fadeType){
+								if(texture_mesh[0]){
+									delete texture_mesh[0];
+									texture_mesh[0] = mesh;
+								}
+								params.exposure  = 0;
+								h.fadeAnimation({run: true, seconds:3,
+									obj:"dummy3",
+									start:0.0,
+									finish: 1.0,
+									method: YAHOO.util.Easing.easeInStrong,
+									onTween:function(obj1,obj2,obj3){
+										params.exposure  = parseFloat(YAHOO.util.Dom.getStyle("dummy3","opacity"))*1.2;
+										render();
+									},
+									onComplete:function(){
+										texture_mesh[0] = mesh;
+									},
+									onStart: function(){
+										if( Number.isInteger(index)){
+											h.updateHTML('index', parseInt(index+1) +"/"+len + "<br/>The Sea By, <br/> " );
+										}
+										YAHOO.util.Dom.setStyle("dummy3","opacity",0.0);
+									}});
+							}else if("crossFade" == fadeType){
+								mesh.material.opacity = 0.0;
+								mesh.material.transparent = true;
+
+								//	method: YAHOO.util.Easing.easeOutStrong,
+								if(texture_mesh[0]){
+									h.fadeAnimation({run: true, seconds:3,
+										obj:"dummy2",
+										start:1.0,
+										finish: 0.0,
+										onComplete:function(){
+											timerObj[1] = "done";
+										},
+										onTween:function(obj1,obj2,obj3){
+											if(timerObj[1] !== "done"){
+												//debug.output(parseFloat(YAHOO.util.Dom.getStyle("dummy2","opacity")))
+												//render();
+											}
+										},
+										onStart: function(){
+											timerObj[1] = "";
+											texture_mesh[0].opacity = 1.0;
+											texture_mesh[0].transparent = true;
+											params.exposure  = 1.2;
+											texture_mesh[0].material.opacity =   1.0;
+											if( Number.isInteger(index)){
+											h.updateHTML('index', parseInt(index+1) +"/"+len + "<br/>The Sea By, <br/> " );
+										}
+										YAHOO.util.Dom.setStyle("dummy2","opacity",1.0);
+										}});
+								}
+							//method: YAHOO.util.Easing.easeInStrong,
+
+								h.fadeAnimation({run: true, seconds:3,
+									obj:"dummy",
+									start:0.0,
+									finish: 1.0,
+									onTween:function(obj1,obj2,obj3){
+										//params.exposure  = parseFloat(YAHOO.util.Dom.getStyle("dummy","opacity")*1.2);
+										if(timerObj[1] !== "done"){
+											if(texture_mesh[0]){
+												texture_mesh[0].material.opacity =  parseFloat(YAHOO.util.Dom.getStyle("dummy2","opacity"));
+											}
+											mesh.material.opacity =  parseFloat(YAHOO.util.Dom.getStyle("dummy","opacity"));
+											render();
+										}
+									},
+										onComplete:function(){
+											if(texture_mesh[0]){
+												scene.remove( texture_mesh[0] );
+											}
+											//params.exposure  = 1.2;
+											mesh.material.opacity = 1.0;
+											timerObj[1] = "done";
+											render();
+											delete texture_mesh[0];
+											texture_mesh[0] = mesh;
+
+
+										},
+									onStart: function(){
+										//params.exposure  = 0.0;
+										params.exposure  = 1.2;
+										mesh.material.opacity =   0.0;
+										if( Number.isInteger(index)){
+											h.updateHTML('index', parseInt(index+1) +"/"+len + "<br/>The Sea By, <br/> " );
+										}
+										YAHOO.util.Dom.setStyle("dummy","opacity",0.0);
+										render();
+									}});
+							}else{
+
+								mesh.material.opacity = 1.0;
+								mesh.material.transparent = false;
+									params.exposure  = 1.2;
+
+								if(texture_mesh[0]){
+									params.exposure  = 1.2;
+									scene.remove( texture_mesh[0] );
+									delete texture_mesh[0];
+								}
+								h.updateHTML('index', parseInt(index + 1) +"/"+len + "<br/>The Sea By, <br/> " );
+								render();
+								texture_mesh[0] = mesh;
+							}
+						}catch(error){
+							debugger;
+						}{
+
+						//  clearInterval(timerObj[0]);
+						//  timerObj[0] =null;
+						// timerObj[0] = setInterval(set_aminte_pulse(params, t), 1);
+				}} );
+			}
+
+
+			}
+
+			function onWindowResize() {
+
+				var aspect = window.innerWidth / window.innerHeight;
+
+				var frustumHeight = camera.top - camera.bottom;
+
+				camera.left = - frustumHeight * aspect / 2;
+				camera.right = frustumHeight * aspect / 2;
+
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+				render();
+
+			}
+
+			//
+
+			function render() {
+
+				renderer.toneMappingExposure = params.exposure;
+
+				renderer.render( scene, camera );
+
+			}
+
+
+		</script>
+	</body>
+</html>
