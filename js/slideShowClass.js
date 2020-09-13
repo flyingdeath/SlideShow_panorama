@@ -33,7 +33,7 @@ function slideShowClass(options){
       var index = 0;
     }else{
       var set = this.textList;
-      var index = -1;
+      var index = 0;
     }
     var element = {canvasObj: c, n : index, 'set': set, bit:1, 
                    'title':this.title, interval:this.interval};
@@ -42,9 +42,12 @@ function slideShowClass(options){
       var paramSet = {instanceObj:this, 'element':element};
       YAHOO.util.Event.addListener(this.pbtnId, 'click', this.toggleShow, paramSet);
     }
+    ;
+    
     if(this.orderSet){
       this.timedRunShow_c(element)(); 
     }else{
+      this.timedRunShow_objects_p(element)
       this.timedRunShow(element);
     }
     return element;
@@ -69,36 +72,42 @@ function slideShowClass(options){
        element.timer = setTimeout(this.timedRunShow_objects_c(element),element.interval);
       }
     }
-    if( element.set){
-      if( (element.n+1) >= element.set.length){
-        if(this.orderSet){
-          element.n = 0;
-        }else{
-          element.n++;
-        }
-      }else{
-        element.n++;
-      }
-    }
   }
   
  
- slideShowClass.prototype.timedRunShow_objects_c = function(element){
-  var iElement = element, instanceObj = this;
+ slideShowClass.prototype.timedRunShow_objects_c = function(){
+  var instanceObj = this;
   return function(){
-      if(element.bit){
-        if( (iElement.n) >= iElement.set.length){
-          instanceObj.fillObject(iElement.set, iElement.n);
-          if(instanceObj.onComplete){
-            setTimeout(instanceObj.onComplete_C(element),instanceObj.onCompleteDelay*1000);
+    instanceObj.timedRunShow_objects_p(instanceObj.element)
+  }
+  
+ }
+ 
+ 
+ slideShowClass.prototype.timedRunShow_objects_p = function(element){
+       if(element.bit){
+         if( (element.n) > (element.set.length)){
+           this.fillObject(element.set, element.n);
+           if(this.onComplete){
+             setTimeout(this.onComplete_C(element),this.onCompleteDelay*1000);
+           }
+         }else{
+           this.fillObject(element.set,element.n);
+           this.timedRunShow(element);
+         }
+        if( element.set){
+          if( (element.n+1) >= element.set.length){
+            if(this.orderSet){
+              element.n = 0;
+            }else{
+              element.n++;
+            }
+          }else{
+            element.n++;
           }
-        }else{
-          instanceObj.fillObject(iElement.set, iElement.n);
-          instanceObj.timedRunShow(iElement);
         }
       }
-    }
-  
+      
  }
  slideShowClass.prototype.onComplete_C = function(element){
   var iElement = element, instanceObj = this;
@@ -109,7 +118,7 @@ function slideShowClass(options){
  
  slideShowClass.prototype.fillObject = function(list,index){
     var h = new helperClass();
-    if(index > 0){ 
+    if(index >= 0){ 
       h.hide(list[index - 1]);
     }
     if(this.fade){
@@ -129,6 +138,17 @@ function slideShowClass(options){
         instanceObj.fillImage(iElement.canvasObj,instanceObj.imagePrefix+iElement.set[iElement.n]+'.'+ instanceObj.imageExt)
         new helperClass().updateHTML(instanceObj.indexId, parseInt(iElement.n +1) +"/"+iElement.set.length + " "+element.title )
         instanceObj.timedRunShow(iElement);
+        if( element.set){
+          if( (iElement.n+1) >= element.set.length){
+            if(this.orderSet){
+              iElement.n = 0;
+            }else{
+              iElement.n++;
+            }
+          }else{
+            iElement.n++;
+          }
+        }
       }else{
         iElement.n--;
       }
