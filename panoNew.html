@@ -39,6 +39,22 @@
 
 	        font-family:arial;
 	        }
+	        #backbtn{
+				position:absolute;
+
+							left:40%;
+				bottom:0px;
+				width:36px;
+				height:36px;
+			}
+			#nextbtn{
+				position:absolute;
+				left:60%;
+				bottom:0px;
+				width:36px;
+				height:36px;
+			}
+
     	#pausebtn{
 				position:absolute;
 				left:50%;
@@ -54,7 +70,7 @@
 	      #btncontainer{
 				position:absolute;
 				top:0px;
-				bottom:40px;
+				bottom:60px;
 				width:99%;
 
 	      }
@@ -184,7 +200,11 @@
 				<img src="https://raw.githubusercontent.com/flyingdeath/SlideShow_panorama/master/Panos/Mics_pano/Thumb/_MG_3396 Panorama.jpg" title="Mics Pano " id="pano_10" class="thumbnail" />
 			</span>
 	  	</div>
-    <img src="https://raw.githubusercontent.com/flyingdeath/SlideShow_GPU_HDR/master/slide_show_assets/p.png" title="Pause" id="pausebtn"/>
+		<img src="./slide_show_assets/arrow_left.png" title="Back" id="backbtn"/>
+		<img src="https://raw.githubusercontent.com/flyingdeath/SlideShow_GPU_HDR/master/slide_show_assets/p.png" title="Pause" id="pausebtn"/>
+		<img src="./slide_show_assets/arrow_right.png" title="Next" id="nextbtn"/>
+
+
 	</div>
 	<div id="dummy"></div>
 	<div id="dummy2"></div>
@@ -209,6 +229,8 @@
 																interval : 30000,
 																indexId : "index",
 																pbtnId:"pausebtn",
+																backId:"backbtn",
+																forwardId:"nextbtn",
 																playBtnImage : 'https://raw.githubusercontent.com/flyingdeath/SlideShow_panorama/master/slide_show_assets/play.png',
 																pauseBtnImage :'https://raw.githubusercontent.com/flyingdeath/SlideShow_panorama/master/slide_show_assets/p.png',
 																showIds:["pano_0","pano_1","pano_2","pano_3","pano_4","pano_5","pano_6","pano_7","pano_8","pano_9","pano_10"],

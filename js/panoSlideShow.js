@@ -16,6 +16,9 @@
     this.element.THREE = THREE;
     this.element.FileReader = FileReader;
     this.element.showIds= initOptions.showIds;
+    this.element.backId= initOptions.backId;
+    this.element.forwardId= initOptions.forwardId;
+    this.element.oldN = 0;
     
     this.element.isUserInteracting = false;
     this.element.onMouseDownMouseX = 0;
@@ -71,6 +74,8 @@
     YAHOO.util.Event.addListener(window,   'resize',    this.onWindowResize_P, this);
     YAHOO.util.Event.addListener(this.element.pbtnId, 'click', this.toggleShow_P() );
     YAHOO.util.Event.addListener(this.element.showIds, 'click', this.changeToDifferentShow_P, this);
+    YAHOO.util.Event.addListener(this.element.backId, 'click', this.changeImageNow_P, this);
+    YAHOO.util.Event.addListener(this.element.forwardId, 'click', this.changeImageNow_P, this);
           
           
   }
@@ -95,6 +100,44 @@
     
   }
   
+  
+  
+     
+    panoSlideShow.prototype.changeImageNow_P = function(eventObj, instanceObj){
+      instanceObj.changeImageNow(eventObj);
+    }
+     
+    panoSlideShow.prototype.changeImageNow = function(eventObj){
+      clearTimeout(this.element.timer);
+      var btnId =YAHOO.util.Event.getTarget(eventObj).id;
+      this.element.n = this.element.oldN;
+    
+      if(btnId == this.element.forwardId){
+        if( (this.element.n+1) >= this.element.setsOflists[this.element.index].list.length){
+            this.element.n = 0;
+        }else{
+          this.element.n++;
+        }
+      }else{
+        if( (this.element.n-1) <= 0){
+            this.element.n = (this.element.setsOflists[this.element.index].list.length -1);
+        }else{
+            this.element.n--;
+          }
+      
+    }
+       this.change_image(this.element.THREE, this.element.setsOflists[this.element.index].list[this.element.n]);
+        new helperClass().updateHTML(this.element.indexId, parseInt(this.element.n +1) +"/"+
+                                     this.element.setsOflists[this.element.index].list.length + " "+
+                                     this.element.setsOflists[this.element.index].title + " by " );
+       this.timedRunShow();
+      
+      
+      
+      
+    }
+    
+  
    
         panoSlideShow.prototype.toggleShow_P = function(){
           var instanceObj = this;
@@ -112,7 +155,7 @@
             this.change_image(this.element.THREE, this.element.setsOflists[this.element.index].list[this.element.n]);
              new helperClass().updateHTML(this.element.indexId, parseInt(this.element.n +1) +"/"+
                                           this.element.setsOflists[this.element.index].list.length + " "+
-                                          this.element.setsOflists[this.element.index].title )
+                                          this.element.setsOflists[this.element.index].title + " by " )
             this.changeImageSrc(this.element.pbtnId,this.element.pauseBtnImage);
             clearTimeout(this.element.timer);
             this.timedRunShow();
@@ -136,26 +179,27 @@
          this.element.timer = setTimeout(this.timedRunShow_c(),this.element.interval);
         }
       }
-      if(this.element.setsOflists[this.element.index].list){
-        if( (this.element.n+1) >= this.element.setsOflists[this.element.index].list.length){
-          if(this.element.setsOflists[this.element.index].list){
-            this.element.n = 0;
-          }else{
-            this.element.n++;
-          }
-        }else{
-          this.element.n++;
-        }
-      }
     }
     
  panoSlideShow.prototype.timedRunShow_c = function(){
   var instanceObj = this;
   return function(){
       if(instanceObj.element.bit){
+        
+        if(instanceObj.element.n !== (1 + instanceObj.element.oldN)){
+          instanceObj.element.n =instanceObj.element.oldN +1;
+        }
+        
         instanceObj.change_image(instanceObj.element.THREE, instanceObj.element.setsOflists[instanceObj.element.index].list[instanceObj.element.n]);
-        new helperClass().updateHTML(instanceObj.element.indexId, parseInt(instanceObj.element.n +1) +"/"+instanceObj.element.setsOflists[instanceObj.element.index].list.length + " "+instanceObj.element.setsOflists[instanceObj.element.index].title )
+        new helperClass().updateHTML(instanceObj.element.indexId, parseInt(instanceObj.element.n +1) +"/"+instanceObj.element.setsOflists[instanceObj.element.index].list.length + " "+instanceObj.element.setsOflists[instanceObj.element.index].title+ " by " );
+        
+        if( (instanceObj.element.n+1) >= instanceObj.element.setsOflists[instanceObj.element.index].list.length){
+            instanceObj.element.n = 0;
+        }else{
+          instanceObj.element.n++;
+        }
         instanceObj.timedRunShow();
+        
       }else{
         iElement.n--;
       }
@@ -181,7 +225,7 @@
           this.element.material = new THREE.MeshBasicMaterial( { map:  this.element.texture  } );
           this.element.mesh = new THREE.Mesh( this.element.geometry, this.element.material );
         this.element.scene.add( this.element.mesh );
-          
+        this.element.oldN = this.element.n;
           
   }
   
