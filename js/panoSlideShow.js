@@ -187,7 +187,11 @@
       if(instanceObj.element.bit){
         
         if(instanceObj.element.n !== (1 + instanceObj.element.oldN)){
-          instanceObj.element.n =instanceObj.element.oldN +1;
+          if((instanceObj.element.oldN +1) >= instanceObj.element.setsOflists[instanceObj.element.index].list.length){
+            instanceObj.element.n =0;
+          }else{
+            instanceObj.element.n =instanceObj.element.oldN +1;
+          }
         }
         
         instanceObj.change_image(instanceObj.element.THREE, instanceObj.element.setsOflists[instanceObj.element.index].list[instanceObj.element.n]);
