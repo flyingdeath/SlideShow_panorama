@@ -19,6 +19,7 @@
     this.element.backId= initOptions.backId;
     this.element.forwardId= initOptions.forwardId;
     this.element.oldN = 0;
+    this.element.runningFlag = "done";
     
     this.element.isUserInteracting = false;
     this.element.onMouseDownMouseX = 0;
@@ -108,30 +109,31 @@
     }
      
     panoSlideShow.prototype.changeImageNow = function(eventObj){
-      clearTimeout(this.element.timer);
-      var btnId =YAHOO.util.Event.getTarget(eventObj).id;
-      this.element.n = this.element.oldN;
-    
-      if(btnId == this.element.forwardId){
-        if( (this.element.n+1) >= this.element.setsOflists[this.element.index].list.length){
-            this.element.n = 0;
-        }else{
-          this.element.n++;
-        }
-      }else{
-        if( (this.element.n-1) <= 0){
-            this.element.n = (this.element.setsOflists[this.element.index].list.length -1);
-        }else{
-            this.element.n--;
+      if( this.element.runningFlag == "done"){
+        clearTimeout(this.element.timer);
+        var btnId =YAHOO.util.Event.getTarget(eventObj).id;
+        this.element.n = this.element.oldN;
+
+        if(btnId == this.element.forwardId){
+          if( (this.element.n+1) >= this.element.setsOflists[this.element.index].list.length){
+              this.element.n = 0;
+          }else{
+            this.element.n++;
           }
-      
-    }
-       this.change_image(this.element.THREE, this.element.setsOflists[this.element.index].list[this.element.n]);
-        new helperClass().updateHTML(this.element.indexId, parseInt(this.element.n +1) +"/"+
-                                     this.element.setsOflists[this.element.index].list.length + " "+
-                                     this.element.setsOflists[this.element.index].title + " by " );
-       this.timedRunShow();
-      
+        }else{
+          if( (this.element.n-1) <= 0){
+              this.element.n = (this.element.setsOflists[this.element.index].list.length -1);
+          }else{
+              this.element.n--;
+            }
+
+        }
+         this.change_image(this.element.THREE, this.element.setsOflists[this.element.index].list[this.element.n]);
+          new helperClass().updateHTML(this.element.indexId, parseInt(this.element.n +1) +"/"+
+                                       this.element.setsOflists[this.element.index].list.length + " "+
+                                       this.element.setsOflists[this.element.index].title + " by " );
+         this.timedRunShow();
+      }
       
       
       
@@ -221,18 +223,165 @@
   }
   
   panoSlideShow.prototype.change_image = function(THREE, oFilename){
-          if(this.element.mesh){
-            this.element.material.dispose();
-            this.element.scene.remove( this.element.mesh );       
+          this.element.textureNew = new THREE.TextureLoader().load( oFilename, this.imageLoadedOnComplete_C(), this.imageLoadedOnProgress_C() );
+          this.element.materialNew = new THREE.MeshBasicMaterial( { map:  this.element.textureNew } );
+          this.element.meshNew = new THREE.Mesh( this.element.geometry, this.element.materialNew );
+          if( this.element.mesh){
+            this.element.mesh.material.transparent =   true;
+            this.element.mesh.material.opacity =   1.0;
           }
-          this.element.texture = new THREE.TextureLoader().load( oFilename );
-          this.element.material = new THREE.MeshBasicMaterial( { map:  this.element.texture  } );
-          this.element.mesh = new THREE.Mesh( this.element.geometry, this.element.material );
-        this.element.scene.add( this.element.mesh );
+            this.element.meshNew.transparent = true;
+            this.element.meshNew.material.transparent =   true;
+            this.element.meshNew.material.opacity =   0.0;
+        this.element.scene.add( this.element.meshNew );
+            this.element.meshNew.material.transparent =   true;
+            this.element.meshNew.material.opacity =   0.0;
         this.element.oldN = this.element.n;
           
   }
+  panoSlideShow.prototype.imageLoadedOnProgress_C = function(){
+   var instanceObj = this;
+   return function(){;
+          if( instanceObj.element.mesh){
+            instanceObj.element.mesh.material.transparent =   true;
+            instanceObj.element.mesh.material.opacity =   1.0;
+          }
+            instanceObj.element.meshNew.transparent = true;
+            instanceObj.element.meshNew.material.transparent =   true;
+            instanceObj.element.meshNew.material.opacity =   0.0;
+   }
+  }
   
+  panoSlideShow.prototype.imageLoadedOnComplete_C = function(){
+   var instanceObj = this;
+   return function(){;
+      instanceObj.imageLoadedOnCompleteCrossFade();
+   }
+  }
+  panoSlideShow.prototype.imageLoadedOnCompleteFadeOutThenIn = function(){
+      var instanceObj = this;
+      
+      instanceObj.element.runningFlag = "";
+        
+         new helperClass().fadeAnimation({run: true, seconds:3,
+          obj:"dummy2",
+          start:1.0,
+          finish: 0.0,
+        onTween:function(obj1,obj2,obj3){
+            if(instanceObj.element.mesh){
+              instanceObj.element.mesh.material.opacity =  parseFloat(YAHOO.util.Dom.getStyle("dummy2","opacity"));
+               instanceObj.element.renderer.render(  instanceObj.element.element.scene,  instanceObj.element.camera );
+            }
+          },
+          onComplete:function(){
+            
+                   new helperClass().fadeAnimation({run: true, seconds:3,
+                    obj:"dummy",
+                    start:0.0,
+                    finish: 1.0,
+                    onTween:function(obj1,obj2,obj3){
+                        instanceObj.element.meshNew.material.opacity =  parseFloat(YAHOO.util.Dom.getStyle("dummy","opacity"));
+                       instanceObj.element.renderer.render(  instanceObj.element.element.scene,  instanceObj.element.camera );
+                    },
+                      onComplete:function(){
+                          if(instanceObj.element.mesh){
+                            instanceObj.element.material.dispose();
+                            instanceObj.element.scene.remove( instanceObj.element.mesh );       
+                          }
+                          instanceObj.element.texture = instanceObj.element.textureNew;
+                          instanceObj.element.material = instanceObj.element.materialNew;
+                          instanceObj.element.mesh = instanceObj.element.meshNew;
+                           instanceObj.element.textureNew = null;
+                           instanceObj.element.materialNew = null;
+                           instanceObj.element.meshNew = null;
+                           
+                 
+                        instanceObj.element.mesh.material.opacity = 1.0;
+                        instanceObj.element.runningFlag = "done";
+                        instanceObj.element.renderer.render(  instanceObj.element.element.scene,  instanceObj.element.camera );
+                      },
+                    onStart: function(){
+                      instanceObj.element.renderer.render(  instanceObj.element.element.scene,  instanceObj.element.camera );
+                  }});
+  
+  
+          },
+          onStart: function(){
+            instanceObj.element.runningFlag = "";
+            instanceObj.element.mesh.opacity = 1.0;
+            instanceObj.element.mesh.material.transparent =   true;
+            instanceObj.element.mesh.transparent = true;
+            instanceObj.element.mesh.material.opacity =   1.0;
+            instanceObj.element.meshNew.material.transparent = true;
+            instanceObj.element.meshNew.material.opacity =   0.0;
+            YAHOO.util.Dom.setStyle("dummy2","opacity",1.0);
+            YAHOO.util.Dom.setStyle("dummy","opacity",0.0);
+          }});
+      
+   
+  
+  }
+  
+  
+  panoSlideShow.prototype.imageLoadedOnCompleteCrossFade = function(){
+      var instanceObj = this;
+        
+         new helperClass().fadeAnimation({run: true, seconds:3,
+          obj:"dummy2",
+          start:1.0,
+          finish: 0.0,
+          onComplete:function(){
+            instanceObj.element.runningFlag= "done";
+          },
+          onStart: function(){
+            instanceObj.element.runningFlag = "";
+            instanceObj.element.mesh.opacity = 1.0;
+            instanceObj.element.mesh.material.transparent =   true;
+            instanceObj.element.mesh.transparent = true;
+            instanceObj.element.mesh.material.opacity =   1.0;
+            instanceObj.element.meshNew.material.transparent = true;
+            instanceObj.element.meshNew.material.opacity =   0.0;
+            YAHOO.util.Dom.setStyle("dummy2","opacity",1.0);
+            YAHOO.util.Dom.setStyle("dummy","opacity",0.0);
+          }});
+      
+   
+       new helperClass().fadeAnimation({run: true, seconds:3,
+        obj:"dummy",
+        start:0.0,
+        finish: 1.0,
+        onTween:function(obj1,obj2,obj3){
+          if(instanceObj.element.runningFlag !== "done"){
+            if(instanceObj.element.mesh){
+              instanceObj.element.mesh.material.opacity =  parseFloat(YAHOO.util.Dom.getStyle("dummy2","opacity"));
+            }
+            instanceObj.element.meshNew.material.opacity =  parseFloat(YAHOO.util.Dom.getStyle("dummy","opacity"));
+            instanceObj.element.renderer.render(  instanceObj.element.element.scene,  instanceObj.element.camera );
+          }
+        },
+          onComplete:function(){
+              if(instanceObj.element.mesh){
+                instanceObj.element.material.dispose();
+                instanceObj.element.scene.remove( instanceObj.element.mesh );       
+              }
+              instanceObj.element.texture = instanceObj.element.textureNew;
+              instanceObj.element.material = instanceObj.element.materialNew;
+              instanceObj.element.mesh = instanceObj.element.meshNew;
+               instanceObj.element.textureNew = null;
+               instanceObj.element.materialNew = null;
+               instanceObj.element.meshNew = null;
+               
+     
+            instanceObj.element.mesh.material.opacity = 1.0;
+            instanceObj.element.runningFlag = "done";
+             instanceObj.element.renderer.render(  instanceObj.element.element.scene,  instanceObj.element.camera );
+          },
+        onStart: function(){
+          instanceObj.element.renderer.render(  instanceObj.element.element.scene,  instanceObj.element.camera );
+      }});
+  
+  
+  }
   
   
   
