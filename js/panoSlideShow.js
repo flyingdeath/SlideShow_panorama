@@ -223,7 +223,10 @@
   }
   
   panoSlideShow.prototype.change_image = function(THREE, oFilename){
-          this.element.textureNew = new THREE.TextureLoader().load( oFilename, this.imageLoadedOnComplete_C(), this.imageLoadedOnProgress_C() );
+          this.element.textureNew = new THREE.TextureLoader().load( oFilename, 
+                                                                    this.imageLoadedOnComplete_C(), 
+                                                                    this.imageLoadedOnProgress_C(), 
+                                                                    this.imageLoadedOnError_C() );
           this.element.materialNew = new THREE.MeshBasicMaterial( { map:  this.element.textureNew } );
           this.element.meshNew = new THREE.Mesh( this.element.geometry, this.element.materialNew );
           if( this.element.mesh){
@@ -240,6 +243,18 @@
           
   }
   panoSlideShow.prototype.imageLoadedOnProgress_C = function(){
+   var instanceObj = this;
+   return function(){;
+          if( instanceObj.element.mesh){
+            instanceObj.element.mesh.material.transparent =   true;
+            instanceObj.element.mesh.material.opacity =   1.0;
+          }
+            instanceObj.element.meshNew.transparent = true;
+            instanceObj.element.meshNew.material.transparent =   true;
+            instanceObj.element.meshNew.material.opacity =   0.0;
+   }
+  }
+  panoSlideShow.prototype.imageLoadedOnError_C = function(){
    var instanceObj = this;
    return function(){;
           if( instanceObj.element.mesh){
