@@ -223,6 +223,7 @@
   }
   
   panoSlideShow.prototype.change_image = function(THREE, oFilename){
+          this.element.runningFlag = "";
           this.element.textureNew = new THREE.TextureLoader().load( oFilename, 
                                                                     this.imageLoadedOnComplete_C(), 
                                                                     this.imageLoadedOnProgress_C(), 
@@ -283,6 +284,7 @@
           start:1.0,
           finish: 0.0,
         onTween:function(obj1,obj2,obj3){
+            instanceObj.element.runningFlag = "";
             if(instanceObj.element.mesh){
               instanceObj.element.mesh.material.opacity =  parseFloat(YAHOO.util.Dom.getStyle("dummy2","opacity"));
                instanceObj.element.renderer.render(  instanceObj.element.element.scene,  instanceObj.element.camera );
@@ -295,6 +297,7 @@
                     start:0.0,
                     finish: 1.0,
                     onTween:function(obj1,obj2,obj3){
+                        instanceObj.element.runningFlag = "";
                         instanceObj.element.meshNew.material.opacity =  parseFloat(YAHOO.util.Dom.getStyle("dummy","opacity"));
                        instanceObj.element.renderer.render(  instanceObj.element.element.scene,  instanceObj.element.camera );
                     },
@@ -366,6 +369,7 @@
         start:0.0,
         finish: 1.0,
         onTween:function(obj1,obj2,obj3){
+          instanceObj.element.runningFlag = "";
           if(instanceObj.element.runningFlag !== "done"){
             if(instanceObj.element.mesh){
               instanceObj.element.mesh.material.opacity =  parseFloat(YAHOO.util.Dom.getStyle("dummy2","opacity"));
